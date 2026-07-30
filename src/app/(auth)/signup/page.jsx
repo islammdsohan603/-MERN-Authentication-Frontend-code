@@ -12,6 +12,9 @@ import {
   Loader2,
   ArrowRight,
 } from 'lucide-react';
+import axios, { Axios } from 'axios';
+import { toast } from 'react-toastify';
+import { useRouter } from 'next/navigation';
 
 // Reusable Input Field Component
 const InputField = ({
@@ -73,6 +76,7 @@ const InputField = ({
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   //  input state
   const [formData, setFormData] = useState({
@@ -83,17 +87,37 @@ const Signup = () => {
 
   // input update
   const handleChange = e => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
-  const handleSubmit = e => {
-    e.preventDefault();
-    setIsLoading(true);
+  const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL;
 
-    console.log('Submitted Data:', formData);
+  const handleSubmit = async e => {
+    e.preventDefault();
+
+    try {
+      setIsLoading(true);
+      const res = await axios.post(`${serverUrl}/user/register`, formData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (res.data.success) {
+        router.refresh();
+        router.push('/login');
+
+        toast.success(res.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
 
     setTimeout(() => {
       setIsLoading(false);
