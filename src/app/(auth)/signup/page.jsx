@@ -109,7 +109,7 @@ const Signup = () => {
 
       if (res.data.success) {
         router.refresh();
-        router.push('/login');
+        router.push('/verifyemail');
 
         toast.success(res.data.message);
       }
