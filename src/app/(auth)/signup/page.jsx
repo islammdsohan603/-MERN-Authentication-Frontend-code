@@ -112,6 +112,8 @@ const Signup = () => {
         router.push('/verifyemail');
 
         toast.success(res.data.message);
+      } else {
+        toast.error(res.data.error);
       }
     } catch (error) {
       console.log(error);
