@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useRouter, useParams } from 'next/navigation'; // 🎯 useParams যোগ করা হয়েছে
 import { motion } from 'framer-motion';
 import {
   KeyRound,
@@ -12,6 +13,8 @@ import {
   CheckCircle2,
   Loader2,
 } from 'lucide-react';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const ChangePassword = () => {
   const [newPassword, setNewPassword] = useState('');
@@ -20,9 +23,62 @@ const ChangePassword = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = e => {
+  const router = useRouter();
+  const params = useParams();
+
+  // 🎯 Dynamic Route [email] থেকে ইমেইল বের করা
+  const rawEmail = params?.email ? String(params.email) : '';
+  const email = decodeURIComponent(rawEmail);
+
+  const handleSubmit = async e => {
     e.preventDefault();
-    // পাসওয়ার্ড সাবমিট লজিক এখানে যুক্ত করতে পারবেন
+
+    if (!newPassword || !confirmPassword) {
+      toast.error('Please fill in both password fields.');
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      toast.error('Passwords do not match. Please try again.');
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      toast.error('Password must be at least 6 characters long.');
+      return;
+    }
+
+    const serverUrl =
+      process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:5000';
+
+    try {
+      setIsLoading(true);
+
+      const [res] = await Promise.all([
+        axios.post(
+          `${serverUrl}/user/change-password/${encodeURIComponent(email)}`,
+          {
+            newPassword,
+            confirmPassword,
+          },
+        ),
+        new Promise(resolve => setTimeout(resolve, 2000)),
+      ]);
+
+      if (res.data.success) {
+        toast.success(res.data.message || 'Password updated successfully');
+        router.push('/login');
+      } else {
+        toast.error(res.data.message || 'Failed to update password');
+        setIsLoading(false);
+      }
+    } catch (error) {
+      const errorMsg =
+        error.response?.data?.message ||
+        'Failed to update password. Please try again later.';
+      toast.error(errorMsg);
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -33,7 +89,6 @@ const ChangePassword = () => {
         transition={{ duration: 0.4, ease: 'easeOut' }}
         className="w-full max-w-md bg-white/90 backdrop-blur-md rounded-2xl shadow-xl border border-green-100 p-6 sm:p-8 space-y-6"
       >
-        {/* Header */}
         <div className="text-center space-y-2">
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-green-100 text-green-600 mb-2 shadow-inner">
             <KeyRound className="w-7 h-7" />
@@ -42,13 +97,14 @@ const ChangePassword = () => {
             Reset Password
           </h1>
           <p className="text-xs sm:text-sm text-gray-600 max-w-xs mx-auto">
-            Enter your new password below to secure your account.
+            Enter a new password for{' '}
+            <span className="font-semibold text-green-700">
+              {email || 'your account'}
+            </span>
           </p>
         </div>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-5">
-          {/* New Password */}
           <div className="space-y-1.5">
             <label className="text-xs sm:text-sm font-semibold text-gray-700 block">
               New Password
@@ -79,7 +135,6 @@ const ChangePassword = () => {
             </div>
           </div>
 
-          {/* Confirm Password */}
           <div className="space-y-1.5">
             <label className="text-xs sm:text-sm font-semibold text-gray-700 block">
               Confirm New Password
@@ -110,7 +165,6 @@ const ChangePassword = () => {
             </div>
           </div>
 
-          {/* Password Requirements Checklist */}
           <div className="p-3.5 bg-gray-50 rounded-xl border border-gray-100 space-y-2">
             <p className="text-xs font-semibold text-gray-500">
               Password requirements:
@@ -137,7 +191,6 @@ const ChangePassword = () => {
             </div>
           </div>
 
-          {/* Submit Button */}
           <motion.button
             whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.99 }}
@@ -156,7 +209,6 @@ const ChangePassword = () => {
           </motion.button>
         </form>
 
-        {/* Footer */}
         <div className="text-center pt-2 border-t border-gray-100">
           <Link
             href="/login"
