@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🔐 Full-Stack Authentication & Password Reset System
 
-## Getting Started
+এটি একটি সম্পূর্ণ **Full-Stack Web Application**, যেখানে ইউজার অথেন্টিকেশন,
+ইমেইল OTP ভ্যালিডেশন এবং পাসওয়ার্ড রিসেট/পরিবর্তন করার সুবিধা রয়েছে। এই
+প্রজেক্টটির ফ্রন্টএন্ড এবং ব্যাকএন্ড আলাদাভাবে সেটআপ ও রান করার জন্য নিচে
+বিস্তারিত নির্দেশাবলী দেওয়া হলো।
 
-First, run the development server:
+---
+
+## 🚀 Tech Stack (প্রযুক্তিসমূহ)
+
+### 🎨 Frontend
+
+- **Framework:** Next.js (App Router) / React.js
+- **Styling:** Tailwind CSS, Lucide React (Icons)
+- **Animation:** Framer Motion
+- **HTTP Client:** Axios
+- **Notifications:** React Toastify
+
+### ⚙️ Backend
+
+- **Runtime Environment:** Node.js
+- **Framework:** Express.js
+- **Database:** MongoDB (Mongoose ORM)
+- **Security & Auth:** Bcrypt (Password Hashing)
+
+---
+
+## ✨ Features (বৈশিষ্ট্যসমূহ)
+
+- 📩 **OTP Verification:** ইমেইলে OTP পাঠিয়ে অ্যাকাউন্ট বা রিসেট ভেরিফিকেশন।
+- 🔑 **Reset & Change Password:** নিরাপদে পাসওয়ার্ড পরিবর্তনের সুবিধা।
+- 👁️ **Password Toggle:** পাসওয়ার্ড দৃশ্যমান বা লুকানোর অপশন (Show/Hide
+  Password)।
+- ⚡ **Interactive UI:** Framer Motion দিয়ে তৈরি চমৎকার লোডার এবং এনিমেশন।
+- 📱 **Fully Responsive:** মোবাইল, ট্যাবলেট এবং ডেস্কটপ ফ্রেন্ডলি ডিজাইন।
+
+---
+
+## 🛠️ Prerequisites (পূর্বশর্ত)
+
+প্রোজেক্টটি আপনার সিস্টেমে চালানোর আগে নিচের সফটওয়্যারগুলো ইনস্টল করা থাকতে
+হবে:
+
+- [Node.js](https://nodejs.org/) (v18.x বা তার বেশি)
+- [MongoDB](https://www.mongodb.com/) (Local database অথবা MongoDB Atlas URL)
+- Git
+
+---
+
+## 📁 Installation & Setup Guide
+
+প্রথমেই গিটহাব থেকে প্রোজেক্টটি ক্লোন করে নিন:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone [https://github.com/your-username/your-repository-name.git](https://github.com/your-username/your-repository-name.git)
+cd your-repository-name
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+├── backend/ │ ├── config/ # Database configuration │ ├── controllers/ #
+Business logic (User, Auth) │ ├── models/ # MongoDB Mongoose Schemas │ ├──
+routes/ # Express API Routes │ ├── server.js # Main Entry point │ └── .env │ └──
+frontend/ ├── src/ │ ├── app/ # Next.js App Router pages │ └── components/ #
+Reusable UI Components ├── public/ # Static Assets └── .env.local
