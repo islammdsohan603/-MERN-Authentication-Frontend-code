@@ -36,7 +36,6 @@ const ForgotPassword = () => {
     try {
       setIsLoading(true);
 
-      // ব্যাকএন্ড API কল (আপনার প্রয়োজন অনুযায়ী API এন্ডপয়েন্ট পরিবর্তন করে নিন)
       const res = await axios.post(`${serverUrl}/user/forgot-password`, {
         email,
       });
@@ -50,8 +49,6 @@ const ForgotPassword = () => {
         setError(res.data.message || 'Something went wrong. Please try again.');
       }
     } catch (err) {
-      // API রেসপন্স না থাকলেও ক্লায়েন্ট সাইডে সাকসেস স্টেট দেখানোর সুবিধার্থে
-      // যদি আপনার API তৈরি করা থাকে, তবে নিচের লজিকটি হ্যান্ডেল করতে পারেন:
       setError(
         err.response?.data?.message ||
           'Failed to send reset link. Try again later.',
