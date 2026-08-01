@@ -15,6 +15,7 @@ import {
 import axios, { Axios } from 'axios';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
+import { getData } from '@/components/context/userContext';
 
 // Reusable Input Field Component
 const InputField = ({
@@ -77,6 +78,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const { setUser } = getData();
 
   //  input state
   const [formData, setFormData] = useState({
@@ -109,6 +111,9 @@ const Login = () => {
       if (res.data.success) {
         router.refresh();
         router.push('/');
+
+        setUser(res.data.user);
+        localStorage.setItem('accessToken', res.data.user.token);
 
         toast.success(res.data.message);
       } else {
