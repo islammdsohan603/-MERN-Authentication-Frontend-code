@@ -1,12 +1,34 @@
 'use client';
 
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
-// Context তৈরি
 export const UserContext = createContext(null);
 
+const getStoredUser = () => {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
+  try {
+    const storedUser = localStorage.getItem('authUser');
+    return storedUser ? JSON.parse(storedUser) : null;
+  } catch {
+    return null;
+  }
+};
+
 export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(getStoredUser);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    if (user) {
+      localStorage.setItem('authUser', JSON.stringify(user));
+    } else {
+      localStorage.removeItem('authUser');
+    }
+  }, [user]);
 
   return (
     <UserContext.Provider value={{ user, setUser }}>
@@ -15,10 +37,10 @@ export const UserProvider = ({ children }) => {
   );
 };
 
-export const getData = () => {
+export const useUser = () => {
   const context = useContext(UserContext);
   if (!context) {
-    throw new Error('getData must be used within a UserProvider');
+    throw new Error('useUser must be used within a UserProvider');
   }
   return context;
 };

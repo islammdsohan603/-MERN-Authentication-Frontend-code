@@ -12,10 +12,10 @@ import {
   Loader2,
   ArrowRight,
 } from 'lucide-react';
-import axios, { Axios } from 'axios';
+import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
-import { getData } from '@/components/context/userContext';
+import { useUser } from '@/components/context/userContext';
 
 // Reusable Input Field Component
 const InputField = ({
@@ -78,7 +78,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const { setUser } = getData();
+  const { setUser } = useUser();
 
   //  input state
   const [formData, setFormData] = useState({
@@ -109,25 +109,25 @@ const Login = () => {
       });
 
       if (res.data.success) {
-        router.refresh();
-        router.push('/');
+        const authUser = res.data.user ?? res.data.data;
+        const accessToken = res.data.accessToken;
+        const refreshToken = res.data.refreshToken;
 
-        setUser(res.data.user);
-        localStorage.setItem('accessToken', res.data.user.token);
+        setUser(authUser);
+        localStorage.setItem('authUser', JSON.stringify(authUser));
+        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('refreshToken', refreshToken);
 
         toast.success(res.data.message);
+        router.push('/');
       } else {
-        toast.error(res.data.error);
+        toast.error(res.data.message || 'Login failed');
       }
     } catch (error) {
-      console.log(error);
+      toast.error(error?.response?.data?.message || 'Something went wrong');
     } finally {
       setIsLoading(false);
     }
-
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
   };
 
   return (

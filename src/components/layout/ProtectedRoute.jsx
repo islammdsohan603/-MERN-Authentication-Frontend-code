@@ -1,11 +1,11 @@
 'use client';
 
 import React from 'react';
-import { getData } from '../context/userContext';
+import { useUser } from '../context/userContext';
 import Link from 'next/link';
 
 const ProtectedRoute = ({ children }) => {
-  const { user } = getData();
+  const { user } = useUser();
 
   if (!user) {
     return (

@@ -4,12 +4,12 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Book, BookOpen, User2, Menu, X, LogOut } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { getData } from '../context/userContext';
+import { useUser } from '../context/userContext';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
 const Navbar = () => {
-  const { user, setUser } = getData();
+  const { user, setUser } = useUser();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
@@ -221,7 +221,7 @@ const Navbar = () => {
                   Login
                 </Link>
                 <Link
-                  href="/register"
+                  href="/signup"
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="w-full text-center py-2 bg-green-600 text-white rounded-lg font-medium"
                 >
