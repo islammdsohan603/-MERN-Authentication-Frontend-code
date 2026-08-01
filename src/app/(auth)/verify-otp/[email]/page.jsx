@@ -9,7 +9,6 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 
 const VerifyOtp = () => {
-  // নিশ্চিত করুন এখানে ৬টি খালি স্ট্রিং আছে
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [isLoading, setIsLoading] = useState(false);
   const [isResending, setIsResending] = useState(false);
@@ -20,20 +19,17 @@ const VerifyOtp = () => {
   const router = useRouter();
   const params = useParams();
 
-  // Dynamic Route [email] থেকে ইমেইল বের করা
   const rawEmail = params?.email ? String(params.email) : '';
   const email = decodeURIComponent(rawEmail);
 
-  // ইনপুট হ্যান্ডলার (শুধুমাত্র ১টি সংখ্যা গ্রহণ করবে)
   const handleChange = (index, value) => {
-    const digit = value.replace(/\D/g, ''); // সংখ্যা ছাড়া বাকি সব বাদ
+    const digit = value.replace(/\D/g, '');
     if (digit.length > 1) return;
 
     const updatedOtp = [...otp];
     updatedOtp[index] = digit;
     setOtp(updatedOtp);
 
-    // পরের ঘরে অটো-ফোকাস
     if (digit && index < 5) {
       inputRefs.current[index + 1]?.focus();
     }
@@ -45,7 +41,6 @@ const VerifyOtp = () => {
     }
   };
 
-  // সম্পূর্ণ ৬ ডিজিট পেস্ট করার সুবিধা
   const handlePaste = e => {
     e.preventDefault();
     const pastedData = e.clipboardData
@@ -63,6 +58,7 @@ const VerifyOtp = () => {
     }
   };
 
+  // 🎯 সংশোধনকৃত handleSubmit ফাংশন
   const handleSubmit = async e => {
     e.preventDefault();
     setError('');
@@ -73,24 +69,30 @@ const VerifyOtp = () => {
       return;
     }
 
-    const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL;
+    const serverUrl =
+      process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:5000';
 
     try {
       setIsLoading(true);
-      const res = await axios.post(
-        `${serverUrl}/user/verify-otp/${encodeURIComponent(email)}`,
-        { otp: fullOtp },
-      );
+
+      // API কল এবং বাধ্যতামূলক ২ সেকেন্ডের লোডিং এনিমেশন টাইমার একসাথে চালানো
+      const [res] = await Promise.all([
+        axios.post(
+          `${serverUrl}/user/verify-otp/${encodeURIComponent(email)}`,
+          { otp: fullOtp },
+        ),
+        new Promise(resolve => setTimeout(resolve, 2000)), // ২ সেকেন্ডের ফিক্সড এনিমেশন
+      ]);
 
       if (res.data.success) {
         setSuccess(true);
         toast.success(res.data.message || 'OTP verified successfully');
 
-        setTimeout(() => {
-          router.push(`/change-password/${email}`);
-        }, 2000);
+        // ২ সেকেন্ডের লোডিং শেষ হলে নেভিগেট হবে
+        router.push(`/change-password/${encodeURIComponent(email)}`);
       } else {
         setError(res.data.message || 'Failed to verify OTP. Please try again.');
+        setIsLoading(false);
       }
     } catch (err) {
       const errorMsg =
@@ -98,7 +100,6 @@ const VerifyOtp = () => {
         'Failed to verify OTP. Please try again later.';
       setError(errorMsg);
       toast.error(errorMsg);
-    } finally {
       setIsLoading(false);
     }
   };
@@ -109,11 +110,12 @@ const VerifyOtp = () => {
       return;
     }
 
-    const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL;
+    const serverUrl =
+      process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:5000';
 
     try {
       setIsResending(true);
-      const res = await axios.post(`${serverUrl}/resend-otp`, { email });
+      const res = await axios.post(`${serverUrl}/user/resend-otp`, { email });
       toast.success(
         res.data.message || 'A new verification code has been sent!',
       );
@@ -158,7 +160,6 @@ const VerifyOtp = () => {
         )}
 
         <form className="space-y-6" onSubmit={handleSubmit}>
-          {/* এখানে নির্দিষ্ট ৬টি ঘর তৈরি হবে */}
           <div className="flex justify-between gap-1.5 sm:gap-2">
             {otp.map((digit, index) => (
               <input
