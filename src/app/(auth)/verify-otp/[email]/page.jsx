@@ -73,8 +73,7 @@ const VerifyOtp = () => {
       return;
     }
 
-    const serverUrl =
-      process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:5000';
+    const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL;
 
     try {
       setIsLoading(true);
@@ -88,8 +87,8 @@ const VerifyOtp = () => {
         toast.success(res.data.message || 'OTP verified successfully');
 
         setTimeout(() => {
-          router.push('/login');
-        }, 1500);
+          router.push(`/change-password/${email}`);
+        }, 2000);
       } else {
         setError(res.data.message || 'Failed to verify OTP. Please try again.');
       }
@@ -110,8 +109,7 @@ const VerifyOtp = () => {
       return;
     }
 
-    const serverUrl =
-      process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:5000';
+    const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL;
 
     try {
       setIsResending(true);
@@ -122,7 +120,6 @@ const VerifyOtp = () => {
     } catch (err) {
       toast.error(
         err.response?.data?.message || 'Failed to resend OTP. Try again.',
-        console.log(err),
       );
     } finally {
       setIsResending(false);
