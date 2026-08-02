@@ -7,6 +7,8 @@
 
 ---
 
+## Live Link: https://frontend-one-red-suqmzwnaqu.vercel.app/
+
 ## 🚀 Tech Stack (প্রযুক্তিসমূহ)
 
 ### 🎨 Frontend
