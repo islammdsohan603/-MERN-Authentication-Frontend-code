@@ -19,7 +19,7 @@ const Navbar = () => {
         ? localStorage.getItem('accessToken')
         : null;
     const serverUrl =
-      process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:5000';
+      process.env.NEXT_PUBLIC_SERVER_URL || 'https://servercode-ten.vercel.app';
 
     try {
       const res = await axios.post(

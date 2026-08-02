@@ -56,9 +56,3 @@
 git clone [https://github.com/your-username/your-repository-name.git](https://github.com/your-username/your-repository-name.git)
 cd your-repository-name
 ```
-
-├── backend/ │ ├── config/ # Database configuration │ ├── controllers/ #
-Business logic (User, Auth) │ ├── models/ # MongoDB Mongoose Schemas │ ├──
-routes/ # Express API Routes │ ├── server.js # Main Entry point │ └── .env │ └──
-frontend/ ├── src/ │ ├── app/ # Next.js App Router pages │ └── components/ #
-Reusable UI Components ├── public/ # Static Assets └── .env.local
